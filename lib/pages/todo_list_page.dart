@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 
-class TodoListPage extends StatelessWidget {
-  const TodoListPage({Key? key}) : super(key: key);
+class TodoListPage extends StatefulWidget {
+  TodoListPage({Key? key}) : super(key: key);
+
+  @override
+  State<TodoListPage> createState() => _TodoListPageState();
+}
+
+class _TodoListPageState extends State<TodoListPage> {
+  final TextEditingController tarefasController = TextEditingController();
+
+  List<String> tarefas = [];
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +25,7 @@ class TodoListPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextField(
+                      controller: tarefasController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Adicione uma tarefa',
@@ -25,7 +35,13 @@ class TodoListPage extends StatelessWidget {
                   ),
                   SizedBox(width: 8),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      String text = tarefasController.text;
+                      setState(() {
+                        tarefas.add(text);
+                      });
+                      tarefasController.clear();
+                    },
                     style: ElevatedButton.styleFrom(
                       primary: Color(0xff00d7f3),
                       padding: EdgeInsets.all(14),
@@ -38,26 +54,19 @@ class TodoListPage extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 16),
-              ListView(
-                shrinkWrap: true,
-                children: [
-                  ListTile(
-                    title: Text('Tarefa 1'),
-                    subtitle: Text('20/11/2020'),
-                    leading: Icon(Icons.save, size: 30,),
-                    onTap: () {
-                      print('Tarefa 1');
-                    },
-                  ),
-                  ListTile(
-                    title: Text('Tarefa 1'),
-                    subtitle: Text('21/11/2020'),
-                    leading: Icon(Icons.person, size: 30,),
-                    onTap: () {
-                      print('Tarefa 1');
-                    },
-                  ),
-                ],
+              Flexible(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    for (String tarefa in tarefas)
+                      ListTile(
+                        title: Text(tarefa),
+                        onTap: () {
+                          print('Tarefa:  $tarefa');
+                        },
+                      ),
+                  ],
+                ),
               ),
               SizedBox(
                 height: 16,
