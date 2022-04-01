@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lista_tarefas/models/todo.dart';
 
 import '../widgets/todo_list_item.dart';
 
@@ -12,7 +13,7 @@ class TodoListPage extends StatefulWidget {
 class _TodoListPageState extends State<TodoListPage> {
   final TextEditingController tarefasController = TextEditingController();
 
-  List<String> tarefas = [];
+  List<Todo> todos = [];
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,11 @@ class _TodoListPageState extends State<TodoListPage> {
                       onPressed: () {
                         String text = tarefasController.text;
                         setState(() {
-                          tarefas.add(text);
+                          Todo todo = Todo(
+                            title: text,
+                            dateTime: DateTime.now()
+                          );
+                          todos.add(todo);
                         });
                         tarefasController.clear();
                       },
@@ -61,9 +66,9 @@ class _TodoListPageState extends State<TodoListPage> {
                   child: ListView(
                     shrinkWrap: true,
                     children: [
-                      for (String tarefa in tarefas)
+                      for (Todo todo in todos)
                         TodoListItem(
-                          title: tarefa,
+                          todo: todo,
                         ),
                     ],
                   ),
@@ -75,7 +80,7 @@ class _TodoListPageState extends State<TodoListPage> {
                   children: [
                     Expanded(
                       child: Text(
-                        'Você possui ${tarefas.length} tarefas pendentes',
+                        'Você possui ${todos.length} tarefas pendentes',
                       ),
                     ),
                     SizedBox(width: 8),
