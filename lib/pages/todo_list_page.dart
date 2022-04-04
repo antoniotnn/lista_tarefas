@@ -20,6 +20,8 @@ class _TodoListPageState extends State<TodoListPage> {
   Todo? deletedTodo;
   int? deletedTodoPos;
 
+  String? errorText;
+
   @override
   void initState() {
     super.initState();
@@ -50,7 +52,17 @@ class _TodoListPageState extends State<TodoListPage> {
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Adicione uma tarefa',
-                          hintText: 'Ex. Estudar Flutter',
+                          hintText: 'Ex. Comprar pão',
+                          errorText: errorText,
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xff00d7f3),
+                              width: 2,
+                            ),
+                          ),
+                          labelStyle: TextStyle(
+                            color: Color(0xff00d7f3),
+                          ),
                         ),
                       ),
                     ),
@@ -58,10 +70,19 @@ class _TodoListPageState extends State<TodoListPage> {
                     ElevatedButton(
                       onPressed: () {
                         String text = tarefasController.text;
+
+                        if(text.isEmpty) {
+                          setState(() {
+                            errorText = 'Você não inseriu uma descrição para a tarefa!';
+                          });
+                          return;
+                        }
+
                         setState(() {
                           Todo todo =
                               Todo(title: text, dateTime: DateTime.now());
                           todos.add(todo);
+                          errorText = null;
                         });
                         tarefasController.clear();
                         todoRepository.saveTodoList(todos);
